@@ -1,5 +1,6 @@
 <?php
     function setResponse($status = 200, $message = null, $data = [], $success = true) {
+        http_response_code($status);
         echo json_encode( (object) array(
             "status" => $status,
             "message" => $message,
