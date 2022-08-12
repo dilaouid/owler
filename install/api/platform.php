@@ -6,6 +6,6 @@
     setResponse(
         $success ? 200 : 401,
         $success ? 'OK' : "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères.",
-        ["platform_name"],
+        $success ? [] : ["platform_name"],
         $success
     );
