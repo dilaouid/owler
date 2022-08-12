@@ -25,3 +25,15 @@
         $protect = array_map('htmlentities', $arr);
         return (array_map('trim', $protect));
     }
+
+    function checkForEmptyKeysForm($post, $keys) {
+        $emptyKeys = checkForKeys($post, $keys);
+        if (count($emptyKeys) > 0) {
+            setResponse(
+                400,
+                "Tout les champs obligatoires doivent être remplis",
+                $emptyKeys,
+                false
+            );
+        }
+    }
