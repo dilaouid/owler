@@ -1,6 +1,6 @@
 <?php
-    include ('header.php');
-    $post = protectAndTrim($_POST);
+    include ('../../api/header.php');
+    checkForEmptyKeysForm($post, ["host", "username"]);
     $emptyKeys = checkForKeys($post, ["host", "username"]);
 
     if (count($emptyKeys) > 0) {
