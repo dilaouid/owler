@@ -1,4 +1,6 @@
 <?php
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        exit(http_response_code(404));
     include ('../../api/header.php');
     checkForEmptyKeysForm($post, [
         "host",

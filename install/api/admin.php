@@ -1,4 +1,6 @@
 <?php
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        exit(http_response_code(404));
     include('../../api/header.php');
     checkForEmptyKeysForm($post, ["admin_firstname", "admin_lastname", "admin_email", "admin_password", "admin_confirm_password"]);
     $err = [];
