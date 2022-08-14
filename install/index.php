@@ -46,9 +46,6 @@
                 <div class="fieldGroupInstallForm" id="host_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="host">Hôte MySQL*</label>
                     <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="host" title="Champ obligatoire" required>
-                    <!-- <label class="form-label text-danger fieldErrorInputInstallForm">
-                        <i class="fas fa-exclamation-triangle"></i> Ce champ est obligatoire
-                    </label> -->
                 </div>
 
                 <div class="fieldGroupInstallForm" id="mysql-username_group">
@@ -135,7 +132,7 @@
             <div class="row g-0">
 
                 <div class="col-6 text-start">
-                    <button class="btn btn-outline-dark btn-lg disabled btn-off" id="prev" type="button" disabled>
+                    <button class="btn btn-outline-dark btn-lg btn-off" id="prev" type="button" disabled>
                         <i class="fas fa-arrow-left btnIcon" id="prev-button-icon"></i>
                     </button>
                 </div>
