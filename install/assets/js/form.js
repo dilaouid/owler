@@ -5,8 +5,8 @@ var step = 1; // The current step of the form, 1 by default
 /* Set the loading spinner in the next button */
 const setLoading = (active) => {
   $('.fieldErrorInputInstallForm').remove();
-  $(active ? "#loading" : "#next-button-icon").removeClass('d-none');
-  $(active ? "#next-button-icon" : "#loading").addClass('d-none');
+  $(active ? "#loading" : step < 4 ?? "#next-button-icon").removeClass('d-none');
+  $(active ? step < 4 ?? "#next-button-icon" : "#loading").addClass('d-none');
   active ? $("#next").prop("disabled", true) : $("#next").removeAttr("disabled");
 };
 
@@ -86,10 +86,11 @@ const goToStep = (next) => {
 
   changeButton($(`#prev`), step > 1);
   $('#NextBtnMessage').html(step === 4 ? "Finir l'installation" : '');
-  if (step === 4) {
-    $(`#next-button-icon`).addClass("d-none");
-  } else if ($(`#next-button-icon`).hasClass("d-none") && step < 4) {
-    $(`#next-button-icon`).removeClass("d-none");
+  const nextBtnIcon = $(`#next-button-icon`);
+  if (step === 4 && !nextBtnIcon.hasClass("d-none")) {
+    nextBtnIcon.addClass("d-none");
+  } else if (nextBtnIcon.hasClass("d-none") && step < 4) {
+    nextBtnIcon.removeClass("d-none");
   }
 };
 
