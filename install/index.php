@@ -95,9 +95,9 @@
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_password">Mot de passe*</label>
                     <input class="form-control" type="password" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="left" id="admin_password" required title="Votre mot de passe doit contenir au moins 8 caractères, avec au moins un chiffre, une minuscule, une majuscule et un symbole">
                 </div>
-                <div class="fieldGroupInstallForm" id="admin_confirm_password_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_confirm_password">Confirmer le mot de passe*</label>
-                    <input class="form-control" type="password" id="admin_confirm_password" required title="Votre mot de passe doit contenir au moins 8 caractères, avec au moins un chiffre, une minuscule, une majuscule et un symbole">
+                <div class="fieldGroupInstallForm" id="confirm_admin_password_group">
+                    <label class="form-label text-black-50 fieldLabelInstallForm" for="confirm_admin_password">Confirmer le mot de passe*</label>
+                    <input class="form-control" type="password" id="confirm_admin_password" required title="Votre mot de passe doit contenir au moins 8 caractères, avec au moins un chiffre, une minuscule, une majuscule et un symbole">
                 </div>
             </div>
 
