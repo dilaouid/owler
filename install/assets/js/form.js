@@ -52,18 +52,17 @@ const fillInputObj = () => {
 };
 
 /* Set a border danger to the wrong input field */
-const setBorderDanger = (input, active, message) => {
-  if (!active) {
-    const childInput = $(`#${step !== 4 ? `step-${step}-form` : 'form-col'} :input`);
-    childInput.map( (i, el) => {
-      el.classList.remove('border-danger');
-    });
-  } else {
-    input.map( (el, i) => {
-      $('#' + el).addClass('border-danger');
-      generateErrorLabel($(`#${el}_group`), message);
-    })
-  }
+const setBorderDanger = (input, message, stepToChange) => {
+  const childInput = $(`#${stepToChange !== 4 ? `step-${stepToChange}-form` : 'form-col'} :input`);
+  childInput.map( (i, el) => {
+    el.classList.remove('border-danger');
+  });
+  input.map( (el, i) => {
+    const isObject = el instanceof Object;
+    const prefix = `#${isObject ? Object.keys(el) : el}`;
+    $(prefix).addClass('border-danger');
+    generateErrorLabel($(`${prefix}_group`), isObject ? Object.values(el) : message);
+  });
 };
 
 /* Change the button, make it enabled or disabled */
@@ -92,7 +91,6 @@ const goToStep = (next) => {
 /* Clicking on the next step button */
 $('#next').click( () => {
     setLoading(true);
-    setBorderDanger([], false);
     const data = fillInputObj();
     const qs = convertToQueryString(data);
     xhr.open('post', req[step - 1], true);
@@ -101,7 +99,9 @@ $('#next').click( () => {
         if (xhr.readyState === 4) {
             setLoading(false);
             var res = JSON.parse(xhr.response);
-            !res.success ? setBorderDanger(res.data, true, res.message) : goToStep(1);
+            if (res.success)
+              goToStep(1);
+            setBorderDanger(res.data, res.message, res.success ? step - 1 : step);
         }
     };
     xhr.send(qs);

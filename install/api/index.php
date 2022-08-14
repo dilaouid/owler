@@ -39,7 +39,7 @@
 
     // Between 8 and 20 characters, including a lowercase, uppercase, digit and symbol
     $passwordPattern = '$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$';
-    if (preg_match($passwordPattern, $post['admin_password']))
+    if (!preg_match($passwordPattern, $post['admin_password']))
         array_push($err, ["step-3-form" => "admin_password"]);
     else if ($post["confirm_admin_password"] !== $post["admin_password"])
         array_push($err, ["step-3-form" => "confirm_admin_password"]);
