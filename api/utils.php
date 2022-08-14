@@ -30,7 +30,7 @@
         $emptyKeys = checkForKeys($post, $keys);
         if (count($emptyKeys) > 0) {
             setResponse(
-                400,
+                406,
                 "Tout les champs obligatoires doivent être remplis",
                 $emptyKeys,
                 false
