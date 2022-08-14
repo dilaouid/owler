@@ -4,13 +4,13 @@
     include ('../../api/header.php');
     checkForEmptyKeysForm($post, [
         "host",
-        "username",
+        "mysql-username",
         "platform_name",
         "admin_firstname",
         "admin_lastname",
         "admin_email",
         "admin_password",
-        "admin_confirm_password",
+        "confirm_admin_password",
         "condition_1",
         "condition_2",
         "condition_3",
@@ -21,7 +21,7 @@
     // Check for the first step of the install form - mysql credentials
     /////////////////////////////////////////
 
-    $db = new Database($post['host'], $post['password'], $post['username'], '', is_numeric($post['port']) ?: 3306);
+    $db = new Database($post['host'], $post['mysql-password'] ?: '', $post['mysql-username'], '', is_numeric($post['port']) ? $post['port'] : 3306);
     $err = [];
     if ($db->tryConnection() == false)
         array_push($err, ["step-1-form" => true]);

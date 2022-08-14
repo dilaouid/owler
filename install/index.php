@@ -104,27 +104,27 @@
             <div id="step-4-form" class="d-none">
                 <p class="text-black-50 tos">En installant ce logiciel et complétant ce formulaire, je reconnais avoir lu et accepté que :</p>
                 <div class="fieldGroupInstallForm">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="formCheck-1" required>
-                        <label class="form-check-label fw-bold text-black-50" for="formCheck-1">owler est un logiciel gratuit, libre et opensource. Il ne saurait être vendu, et aucun service de paiement ne pourrait être installé à l'intérieur de ce logiciel.</label>
+                    <div class="form-check" id="condition_1_group">
+                        <input class="form-check-input" type="checkbox" id="condition_1" required>
+                        <label class="form-check-label fw-bold text-black-50" for="condition_1">owler est un logiciel gratuit, libre et opensource. Il ne saurait être vendu, et aucun service de paiement ne pourrait être installé à l'intérieur de ce logiciel.</label>
                     </div>
                 </div>
                 <div class="fieldGroupInstallForm">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="formCheck-2" required>
-                        <label class="form-check-label fw-bold text-black-50" for="formCheck-2">owler est sous license GPLv3. Vous ne pouvez donc vous approprier la propriété intellectuelle du logiciel, ni même retiré la mention "<span class="owler-color">Propulsé par owler</span>".</label>
+                    <div class="form-check" id="condition_2_group">
+                        <input class="form-check-input" type="checkbox" id="condition_2" required>
+                        <label class="form-check-label fw-bold text-black-50" for="condition_2">owler est sous license GPLv3. Vous ne pouvez donc vous approprier la propriété intellectuelle du logiciel, ni même retiré la mention "<span class="owler-color">Propulsé par owler</span>".</label>
                     </div>
                 </div>
                 <div class="fieldGroupInstallForm">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="formCheck-3" required>
-                        <label class="form-check-label fw-bold text-black-50" for="formCheck-3">owler étant sous license GPLv3, je reconnais comprendre que sa tivoïsation est strictement interdite.</label>
+                    <div class="form-check" id="condition_3_group">
+                        <input class="form-check-input" type="checkbox" id="condition_3" required>
+                        <label class="form-check-label fw-bold text-black-50" for="condition_3">owler étant sous license GPLv3, je reconnais comprendre que sa tivoïsation est strictement interdite.</label>
                     </div>
                 </div>
                 <div class="fieldGroupInstallForm">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="formCheck-4" required>
-                        <label class="form-check-label fw-bold text-black-50" for="formCheck-4">Je suis conscient des conditions de la license GPLv3 : je peux bricoler le logiciel mais pas sans limite.</label>
+                    <div class="form-check" id="condition_4_group">
+                        <input class="form-check-input" type="checkbox" id="condition_4" required>
+                        <label class="form-check-label fw-bold text-black-50" for="condition_4">Je suis conscient des conditions de la license GPLv3 : je peux bricoler le logiciel mais pas sans limite.</label>
                     </div>
                 </div>
             </div>
@@ -132,15 +132,16 @@
             <div class="row g-0">
 
                 <div class="col-6 text-start">
-                    <button class="btn btn-outline-dark btn-lg btn-off" id="prev" type="button" disabled>
+                    <button class="btn btn-outline-dark btn-off" id="prev" type="button" disabled>
                         <i class="fas fa-arrow-left btnIcon" id="prev-button-icon"></i>
                     </button>
                 </div>
 
                 <div class="col-6 text-end">
-                    <button class="btn btn-outline-primary btn-lg" id="next" type="button">
+                    <button class="btn btn-outline-primary" id="next" type="button">
                         <span class="spinner-border spinner-border-sm d-none" role="status" id="loading"></span>
                         <i class="fas fa-arrow-right btnIcon" id="next-button-icon"></i>
+                        <span id="NextBtnMessage"></span>
                     </button>
                 </div>
 
