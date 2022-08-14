@@ -46,7 +46,8 @@ const fillInputObj = () => {
     if (isNaN(step) || step < 1 || step > 4) return;
     const childInput = $(`#${step !== 4 ? `step-${step}-form` : 'form-col'} :input`);
     childInput.map( (i, el) => {
-        data = { ...data, [el.id]: ~el.id.indexOf('formCheck') ? el.checked : el.value };
+        data = { ...data, [el.id]: ~el.id.indexOf('condition') ? el.checked : el.value };
+        if (data[el.id] === false) delete data[el.id];
     });
     return (data);
 };
@@ -84,8 +85,12 @@ const goToStep = (next) => {
                     .addClass("text-primary");
 
   changeButton($(`#prev`), step > 1);
-  changeButton($(`#next`), step < 4);
-
+  $('#NextBtnMessage').html(step === 4 ? "Finir l'installation" : '');
+  if (step === 4) {
+    $(`#next-button-icon`).addClass("d-none");
+  } else if ($(`#next-button-icon`).hasClass("d-none") && step < 4) {
+    $(`#next-button-icon`).removeClass("d-none");
+  }
 };
 
 /* Clicking on the next step button */
@@ -99,7 +104,7 @@ $('#next').click( () => {
         if (xhr.readyState === 4) {
             setLoading(false);
             var res = JSON.parse(xhr.response);
-            if (res.success)
+            if (res.success && step < 4)
               goToStep(1);
             setBorderDanger(res.data, res.message, res.success ? step - 1 : step);
         }

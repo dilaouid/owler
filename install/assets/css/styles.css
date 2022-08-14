@@ -34,10 +34,7 @@
   .btn {
     border-radius: 20px;
   }
-  
-  .btn-disabled {
-  }
-  
+
   .btn-off {
     opacity: 0.30;
   }
