@@ -17,7 +17,7 @@
     
     $success = count($err) == 0;
     setResponse(
-        $success ? 200 : 401,
+        $success ? 200 : 406,
         $success ? 'OK' : "Le formulaire saisit est incorrect.",
         $err,
         $success
