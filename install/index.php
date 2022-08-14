@@ -43,7 +43,7 @@
 
             <div id="step-1-form">
 
-                <div class="fieldGroupInstallForm">
+                <div class="fieldGroupInstallForm" id="host_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="host">Hôte MySQL*</label>
                     <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="host" title="Champ obligatoire" required>
                     <!-- <label class="form-label text-danger fieldErrorInputInstallForm">
@@ -51,24 +51,26 @@
                     </label> -->
                 </div>
 
-                <div class="fieldGroupInstallForm">
+                <div class="fieldGroupInstallForm" id="mysql-username_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="mysql-username">Nom d'utilisateur MySQL*</label>
-                    <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="mysql-username" title="Champ obligatoire" required></div>
-                <div class="fieldGroupInstallForm">
+                    <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="mysql-username" title="Champ obligatoire" required>
+                </div>
+                <div class="fieldGroupInstallForm" id="mysql-password_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="mysql-password">Mot de passe MySQL</label>
-                    <input class="form-control" type="password" data-bs-toggle="tooltip" data-bss-tooltip="" id="mysql-password" title="Champ obligatoire"></div>
-                <div class="fieldGroupInstallForm">
+                    <input class="form-control" type="password" data-bs-toggle="tooltip" data-bss-tooltip="" id="mysql-password" title="Champ obligatoire">
+                </div>
+                <div class="fieldGroupInstallForm" id="port_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="port">Port MySQL</label>
                     <input class="form-control" type="text" id="port" placeholder="Par défaut: 3306">
                 </div>
             </div>
 
             <div id="step-2-form" class="d-none">
-                <div class="fieldGroupInstallForm">
+                <div class="fieldGroupInstallForm" id="platform_name_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="platform_name">Nom de votre plateforme de formation(s)*</label>
                     <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="platform_name" title="Champ obligatoire" required>
                 </div>
-                <div class="fieldGroupInstallForm">
+                <div class="fieldGroupInstallForm" id="_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="platform-description">Description de votre plateforme de formation(s)</label>
                     <textarea class="form-control" id="platform-description"></textarea>
                 </div>
@@ -78,23 +80,25 @@
             <div id="step-3-form" class="d-none">
 
                 <div class="row fieldGroupInstallForm">
-                    <div class="col">
+                    <div class="col" id="admin_lastname_group">
                         <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_lastname">Nom*</label>
-                        <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_lastname" title="Champ obligatoire" required></div>
-                    <div class="col">
+                        <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_lastname" title="Champ obligatoire" required>
+                    </div>
+                    <div class="col" id="admin_firstname_group">
                         <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_firstname">Prénom*</label>
-                        <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_firstname" title="Champ obligatoire" required></div>
+                        <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_firstname" title="Champ obligatoire" required>
+                    </div>
                 </div>
 
-                <div class="fieldGroupInstallForm">
+                <div class="fieldGroupInstallForm" id="admin_email_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_email">Adresse e-mail*</label>
                     <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_email" required inputmode="email" title="Champ obligatoire">
                 </div>
-                <div class="fieldGroupInstallForm">
+                <div class="fieldGroupInstallForm" id="admin_password_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_password">Mot de passe*</label>
                     <input class="form-control" type="password" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="left" id="admin_password" required title="Votre mot de passe doit contenir au moins 8 caractères, avec au moins un chiffre, une minuscule, une majuscule et un symbole">
                 </div>
-                <div class="fieldGroupInstallForm">
+                <div class="fieldGroupInstallForm" id="admin_confirm_password_group">
                     <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_confirm_password">Confirmer le mot de passe*</label>
                     <input class="form-control" type="password" id="admin_confirm_password" required title="Votre mot de passe doit contenir au moins 8 caractères, avec au moins un chiffre, une minuscule, une majuscule et un symbole">
                 </div>
@@ -129,15 +133,20 @@
             </div>
 
             <div class="row g-0">
+
                 <div class="col-6 text-start">
-                    <button class="btn btn-outline-dark btn-lg disabled btn-off" id="prev-button" type="button" disabled>
-                        <i class="fas fa-arrow-left btnIcon"></i></button></div>
+                    <button class="btn btn-outline-dark btn-lg disabled btn-off" id="prev" type="button" disabled>
+                        <i class="fas fa-arrow-left btnIcon" id="prev-button-icon"></i>
+                    </button>
+                </div>
+
                 <div class="col-6 text-end">
-                    <button class="btn btn-outline-primary btn-lg" id="next-button" type="button">
+                    <button class="btn btn-outline-primary btn-lg" id="next" type="button">
                         <span class="spinner-border spinner-border-sm d-none" role="status" id="loading"></span>
                         <i class="fas fa-arrow-right btnIcon" id="next-button-icon"></i>
                     </button>
                 </div>
+
             </div>
 
             <div class="row justify-content-center" style="font-size: 10px;">
@@ -159,9 +168,9 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-        const xhr = new XMLHttpRequest();
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="./assets/js/form.js"></script>
+
     <script src="../assets/js/bs-init.js"></script>
 </body>
 
