@@ -4,7 +4,7 @@
     include ('../../api/header.php');
     $diff = checkForEmptyKeysForm($post, ["host", "mysql-username"]);
 
-    $db = new Database($post['host'], $post['mysql-password'] ?: '', $post['mysql-username'], '', is_numeric($post['port']) ?: 3306);
+    $db = new Database($post['host'], $post['mysql-password'] ?: '', $post['mysql-username'], '', is_numeric($post['port']) ? $post['port'] : 3306);
     $success = $db->tryConnection();
     setResponse(
         $success ? 200 : 406,

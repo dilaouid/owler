@@ -20,7 +20,7 @@
         // Try a connection to the database and returns true if the connection was established
         public function tryConnection() {
             try {
-                $this->mysql = new PDO('mysql:host='. $this->host .';port=' . $this->port . ';dbname=' . $this->dbname  . ';charset=utf8', $this->username, $this->username);
+                $this->mysql = new PDO('mysql:host='. $this->host .';port=' . $this->port . ';dbname=' . $this->dbname  . ';charset=utf8', $this->username, $this->password);
                 return (true);
             } catch(Exception $e) {
                 return (false);

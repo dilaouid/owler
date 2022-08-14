@@ -1,7 +1,8 @@
 const xhr = new XMLHttpRequest();
 const req = ["api/database.php", "api/platform.php", "api/admin.php", "api/"];
-var step = 1;
+var step = 1; // The current step of the form, 1 by default
 
+/* Set the loading spinner in the next button */
 const setLoading = (active) => {
   $('.fieldErrorInputInstallForm').remove();
   $(active ? "#loading" : "#next-button-icon").removeClass('d-none');
@@ -9,7 +10,7 @@ const setLoading = (active) => {
   active ? $("#next").prop("disabled", true) : $("#next").removeAttr("disabled");
 };
 
-
+/* Generate the error label after the wrong input field */
 const generateErrorLabel = (parent, message) => {
   const label = document.createElement("label");
   label.classList.add("form-label", "text-danger", "fieldErrorInputInstallForm");
@@ -24,6 +25,7 @@ const generateErrorLabel = (parent, message) => {
   parent.append(label);
 };
 
+/* Convert the input data into query string to send to the api */
 const convertToQueryString = (props) => {
     const objQueryString = { ...props };
     for (const key in objQueryString) {
@@ -38,6 +40,7 @@ const convertToQueryString = (props) => {
     return (qs);
 };
 
+/* Fill the data object to send to the api according to the current step */
 const fillInputObj = () => {
     var data;
     if (isNaN(step) || step < 1 || step > 4) return;
@@ -48,6 +51,7 @@ const fillInputObj = () => {
     return (data);
 };
 
+/* Set a border danger to the wrong input field */
 const setBorderDanger = (input, active, message) => {
   if (!active) {
     const childInput = $(`#${step !== 4 ? `step-${step}-form` : 'form-col'} :input`);
@@ -62,6 +66,7 @@ const setBorderDanger = (input, active, message) => {
   }
 };
 
+/* Change the button, make it enabled or disabled */
 const changeButton = (element, active) => {
   const classes1 = "btn-outline-dark btn-off";
   const classes2 = "btn-outline-primary";
@@ -69,6 +74,7 @@ const changeButton = (element, active) => {
   element.removeClass(active ? classes1 : classes2).addClass(active ? classes2 : classes1);
 };
 
+/* Go to the next or previous step, changing the buttons attributes */
 const goToStep = (next) => {
   $(`#step-${step}-form`).addClass("d-none");
   $(`#step-${step + next}-form`).removeClass("d-none");
@@ -83,6 +89,7 @@ const goToStep = (next) => {
 
 };
 
+/* Clicking on the next step button */
 $('#next').click( () => {
     setLoading(true);
     setBorderDanger([], false);
@@ -94,16 +101,14 @@ $('#next').click( () => {
         if (xhr.readyState === 4) {
             setLoading(false);
             var res = JSON.parse(xhr.response);
-            if (res.success == false)
-              setBorderDanger(res.data, true, res.message);
-            else
-              goToStep(1);
+            !res.success ? setBorderDanger(res.data, true, res.message) : goToStep(1);
         }
     };
     xhr.send(qs);
 });
 
+/* Clicking on the previous step button */
 $('#prev').click( () => {
   if (step === 1) return;
   goToStep(-1);
-})
+});
