@@ -2,7 +2,9 @@
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         exit(http_response_code(404));
     include ('../../api/header.php');
-    $diff = checkForEmptyKeysForm($post, ["host", "mysql-username"]);
+    include('form.php');
+
+    $diff = checkForEmptyKeysForm($post, get_required_input($form[0]["data"]));
 
     $db = new Database($post['host'], $post['mysql-password'] ?: '', $post['mysql-username'], '', is_numeric($post['port']) ? $post['port'] : 3306);
     $success = $db->tryConnection();

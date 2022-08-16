@@ -2,7 +2,9 @@
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         exit(http_response_code(404));
     include('../../api/header.php');
-    checkForEmptyKeysForm($post, ["admin_firstname", "admin_lastname", "admin_email", "admin_password", "confirm_admin_password"]);
+    include('form.php');
+
+    checkForEmptyKeysForm($post, get_required_input($form[2]["data"]));
     $err = [];
     if (filter_var($post["admin_email"], FILTER_VALIDATE_EMAIL) == false)
         array_push($err, ["admin_email" => "L'adresse email saisit est invalide"]);

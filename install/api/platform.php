@@ -1,9 +1,10 @@
 <?php
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         exit(http_response_code(404));
+    include('form.php');
     include ('../../api/header.php');
 
-    checkForEmptyKeysForm($post, ["platform_name"]);
+    checkForEmptyKeysForm($post, get_required_input($form[1]["data"]));
     $success = strlen($post["platform_name"]) >= 3 && strlen($post["platform_name"]) <= 20;
     setResponse(
         $success ? 200 : 406,

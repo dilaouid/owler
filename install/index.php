@@ -1,5 +1,5 @@
 <?php
-    $dbFileConfigExists = file_exists('../config/db.php');
+    include("api/form.php");
 ?>
 
 <!DOCTYPE html>
@@ -41,93 +41,7 @@
         <div class="col-4 col-xxl-4 offset-1 text-start" id="form-col">
             <h5 class="text-primary form-heading" id="title-form-heading">Connexion à la base de données</h5>
 
-            <div id="step-1-form">
-
-                <div class="fieldGroupInstallForm" id="host_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="host">Hôte MySQL*</label>
-                    <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="host" title="Champ obligatoire" required>
-                </div>
-
-                <div class="fieldGroupInstallForm" id="mysql-username_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="mysql-username">Nom d'utilisateur MySQL*</label>
-                    <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="mysql-username" title="Champ obligatoire" required>
-                </div>
-                <div class="fieldGroupInstallForm" id="mysql-password_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="mysql-password">Mot de passe MySQL</label>
-                    <input class="form-control" type="password" data-bs-toggle="tooltip" data-bss-tooltip="" id="mysql-password" title="Champ obligatoire">
-                </div>
-                <div class="fieldGroupInstallForm" id="port_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="port">Port MySQL</label>
-                    <input class="form-control" type="text" id="port" placeholder="Par défaut: 3306">
-                </div>
-            </div>
-
-            <div id="step-2-form" class="d-none">
-                <div class="fieldGroupInstallForm" id="platform_name_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="platform_name">Nom de votre plateforme de formation(s)*</label>
-                    <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="platform_name" title="Champ obligatoire" required>
-                </div>
-                <div class="fieldGroupInstallForm" id="_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="platform-description">Description de votre plateforme de formation(s)</label>
-                    <textarea class="form-control" id="platform-description"></textarea>
-                </div>
-                <p class="fw-light text-black-50" style="font-size: 12px;">N'ayez crainte, ces informations pourront êtres changées par la suite.</p>
-            </div>
-
-            <div id="step-3-form" class="d-none">
-
-                <div class="row fieldGroupInstallForm">
-                    <div class="col" id="admin_lastname_group">
-                        <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_lastname">Nom*</label>
-                        <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_lastname" title="Champ obligatoire" required>
-                    </div>
-                    <div class="col" id="admin_firstname_group">
-                        <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_firstname">Prénom*</label>
-                        <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_firstname" title="Champ obligatoire" required>
-                    </div>
-                </div>
-
-                <div class="fieldGroupInstallForm" id="admin_email_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_email">Adresse e-mail*</label>
-                    <input class="form-control" type="text" data-bs-toggle="tooltip" data-bss-tooltip="" id="admin_email" required inputmode="email" title="Champ obligatoire">
-                </div>
-                <div class="fieldGroupInstallForm" id="admin_password_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="admin_password">Mot de passe*</label>
-                    <input class="form-control" type="password" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="left" id="admin_password" required title="Votre mot de passe doit contenir au moins 8 caractères, avec au moins un chiffre, une minuscule, une majuscule et un symbole">
-                </div>
-                <div class="fieldGroupInstallForm" id="confirm_admin_password_group">
-                    <label class="form-label text-black-50 fieldLabelInstallForm" for="confirm_admin_password">Confirmer le mot de passe*</label>
-                    <input class="form-control" type="password" id="confirm_admin_password" required title="Votre mot de passe doit contenir au moins 8 caractères, avec au moins un chiffre, une minuscule, une majuscule et un symbole">
-                </div>
-            </div>
-
-            <div id="step-4-form" class="d-none">
-                <p class="text-black-50 tos">En installant ce logiciel et complétant ce formulaire, je reconnais avoir lu et accepté que :</p>
-                <div class="fieldGroupInstallForm">
-                    <div class="form-check" id="condition_1_group">
-                        <input class="form-check-input" type="checkbox" id="condition_1" required>
-                        <label class="form-check-label fw-bold text-black-50" for="condition_1">owler est un logiciel gratuit, libre et opensource. Il ne saurait être vendu, et aucun service de paiement ne pourrait être installé à l'intérieur de ce logiciel.</label>
-                    </div>
-                </div>
-                <div class="fieldGroupInstallForm">
-                    <div class="form-check" id="condition_2_group">
-                        <input class="form-check-input" type="checkbox" id="condition_2" required>
-                        <label class="form-check-label fw-bold text-black-50" for="condition_2">owler est sous license GPLv3. Vous ne pouvez donc vous approprier la propriété intellectuelle du logiciel, ni même retiré la mention "<span class="owler-color">Propulsé par owler</span>".</label>
-                    </div>
-                </div>
-                <div class="fieldGroupInstallForm">
-                    <div class="form-check" id="condition_3_group">
-                        <input class="form-check-input" type="checkbox" id="condition_3" required>
-                        <label class="form-check-label fw-bold text-black-50" for="condition_3">owler étant sous license GPLv3, je reconnais comprendre que sa tivoïsation est strictement interdite.</label>
-                    </div>
-                </div>
-                <div class="fieldGroupInstallForm">
-                    <div class="form-check" id="condition_4_group">
-                        <input class="form-check-input" type="checkbox" id="condition_4" required>
-                        <label class="form-check-label fw-bold text-black-50" for="condition_4">Je suis conscient des conditions de la license GPLv3 : je peux bricoler le logiciel mais pas sans limite.</label>
-                    </div>
-                </div>
-            </div>
+            <?= print_form($form); ?>
 
             <div class="row g-0">
 
