@@ -1,5 +1,10 @@
 <?php
-    include("api/form.php");
+    if (is_dir("api")) {
+        include("api/form.php");
+    } else {
+        header('Location: ../');
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>

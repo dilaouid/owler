@@ -46,11 +46,22 @@
 
     // Temporary - no insert in base but just checking if the input are all valid (:
     $success = count($err) == 0;
+    if ($success) {
+        $db->mysql->query('CREATE DATABASE owler CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
+        $db = new Database($post['host'], $post['mysql-password'] ?: '', $post['mysql-username'], '', is_numeric($post['port']) ? $post['port'] : 3306);
+        $db->dbname = 'owler';
+        if ($db->tryConnection() == false) {
+            array_push($err, ["step-1-form" => true]);
+            $success = false;
+        } else {
+            $db->mysql->query(file_get_contents('../owler.sql'));
+            unlink('../owler.sql');
+            // rmdir('.');
+        }
+    }
     setResponse(
         $success ? 200 : 406,
         $success ? 'OK' : "Le formulaire saisit est incorrect.",
         $err,
         $success
     );
-    
-    
