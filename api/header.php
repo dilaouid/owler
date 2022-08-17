@@ -1,6 +1,7 @@
 <?php
     $dirname = dirname(__FILE__, 2);
     include ('utils.php');
+    include($dirname . './config/define.php');
     include($dirname . './Class/Database.php');
     if (file_exists($dirname . '/config/db.php'))
         include ($dirname . '/config/header_pdo.php');
