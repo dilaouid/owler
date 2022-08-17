@@ -37,3 +37,34 @@
             );
         }
     }
+
+    function parse_login($start, $firstname, $lastname) {
+        $prefix = substr($firstname, 0, $start + 1);
+        return strtolower(substr($prefix . $lastname, 0, 10));
+    }
+
+    function fetch($mysql, $login) {
+        $query = $mysql->query("SELECT COUNT(login) AS 'count' FROM users WHERE login = '". $login ."'");
+        $query->execute();
+        $rows = $query->fetch(PDO::FETCH_ASSOC);
+        return $rows['count'];
+    }
+
+    function define_login($mysql, $firstname, $lastname) {
+        $idx = 0;
+        $login = parse_login($idx, $firstname, $lastname);
+        $suffix = 1;
+        $prefixIdx = 1;
+        while (fetch($mysql, $login) > 0) {
+            if ($idx >= strlen($firstname)) {
+                if (strlen($firstname) >= $prefixIdx - 1) {
+                    $prefixIdx = 1;
+                    $suffix = 1;
+                }
+                $login = parse_login($prefixIdx - 1, $firstname, $lastname) . $suffix;
+                $prefixIdx++;
+            } else
+                $login = parse_login($idx++, $firstname, $lastname);
+        }
+        return ($login);
+    }
