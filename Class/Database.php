@@ -40,7 +40,7 @@
         public function init() {
             try {
                 $this->checkDatabaseConfiguration();
-                $this->mysql = new PDO('mysql:host='. $this->host .';port=' . $this->port . ';dbname=' . $this->dbname  . ';charset=utf8', $this->username, $this->username);
+                $this->mysql = new PDO('mysql:host='. $this->host .';port=' . $this->port . ';dbname=' . $this->dbname  . ';charset=utf8', $this->username, $this->password);
             } catch (Exception $e) {
                 die("Une erreur est survenue: " . $e->getMessage());
             }
