@@ -223,8 +223,10 @@
                     $dom .= "<div class=\"row fieldGroupInstallForm\">";
                 }
                 $dom .= print_col_input($formData["name"], is_checkbox($formData), $isRow);
-                $dom .= is_checkbox($formData) ? print_input($formData, null) : print_label($formData, "form-label text-black-50 fieldLabelInstallForm");
-                $dom .= is_checkbox($formData) ? print_label($formData, "form-check-label fw-bold text-black-50") : print_input($formData, null);
+                if (is_checkbox($formData))
+                    $dom .= print_input($formData, null) . print_label($formData, "form-check-label fw-bold text-black-50");
+                else
+                    $dom .= print_label($formData, "form-label text-black-50 fieldLabelInstallForm") . print_input($formData, null);
                 $dom .= "</div>";
                 if (array_key_exists($j, $formEl["rows"]) && !array_key_exists($j + 1, $formEl["rows"])) {
                     $dom .= "</div>";

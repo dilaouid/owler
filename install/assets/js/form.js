@@ -1,5 +1,6 @@
 const xhr = new XMLHttpRequest();
 const req = ["api/database.php", "api/platform.php", "api/admin.php", "api/"];
+const title = ["Connexion à la base de donnée", "Information sur la plateforme", "Compte administrateur", "Conditions"];
 var step = 1; // The current step of the form, 1 by default
 
 /* Set the loading spinner in the next button */
@@ -92,6 +93,7 @@ const goToStep = (next) => {
   } else if (nextBtnIcon.hasClass("d-none") && step < 4) {
     nextBtnIcon.removeClass("d-none");
   }
+  $('#title-form-heading').html(title[step - 1]);
 };
 
 /* Clicking on the next step button */
