@@ -31,6 +31,30 @@
         closedir($dir);
     }
 
+    function changeDefineFile($data) {
+        $replaceDefine = [
+            $data['platform_name'],
+            $data['platform_description'],
+            $data['host'],
+            $data['mysql-username'],
+            $data['mysql-password'],
+            is_numeric($data['port']) ? $data['port'] : 3306
+        ];
+        $searchDefine = [
+            "{PLATFORM_NAME}",
+            "{PLATFORM_DESCRIPTION}",
+            "{DB_HOST}",
+            "{DB_USER}",
+            "{DB_PASSWORD}",
+            "{DB_PORT}",
+        ];
+        $file = file_get_contents("../../config/define.php");
+        $file = str_replace($searchDefine, $replaceDefine, $file);
+        $fd = fopen("../../config/define.php", 'w');
+        fwrite($fd, $file);  
+        fclose($fd);
+    }
+
     function deleteDirectory($dir) {
         if (!file_exists($dir))
             return true;
@@ -83,16 +107,18 @@
             $success = false;
         } else {
             $db->mysql->query(file_get_contents('../owler.sql'));
-            if (PRODUCTION == false) {
+            /* if (PRODUCTION === false) {
                 mv('.', '../api_tmp');
             } else {
                 unlink('../owler.sql');
-            }
-            deleteDirectory('.');
+            } */
+            changeDefineFile($post);
+            
+            // deleteDirectory('.');
         }
     }
     setResponse(
-        $success ? 200 : 406,
+        $success ? 201 : 406,
         $success ? 'OK' : "Le formulaire saisit est incorrect.",
         $err,
         $success
