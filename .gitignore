@@ -1,2 +1,4 @@
 
 config/db.php
+
+install/api_tmp/

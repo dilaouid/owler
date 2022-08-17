@@ -17,6 +17,34 @@
         "condition_4"]
     );
 
+    function mv($src, $dst) { 
+        $dir = opendir($src);
+        @mkdir($dst);
+        while( $file = readdir($dir) ) { 
+            if (( $file != '.' ) && ( $file != '..' )) { 
+                if ( is_dir($src . '/' . $file) ) 
+                    custom_copy($src . '/' . $file, $dst . '/' . $file); 
+                else
+                    copy($src . '/' . $file, $dst . '/' . $file); 
+            }
+        }
+        closedir($dir);
+    }
+
+    function deleteDirectory($dir) {
+        if (!file_exists($dir))
+            return true;
+        if (!is_dir($dir))
+            return unlink($dir);
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..')
+                continue;
+            if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item))
+                return false;
+        }
+        return rmdir($dir);
+    }
+
     /////////////////////////////////////////
     // Check for the first step of the install form - mysql credentials
     /////////////////////////////////////////
@@ -55,8 +83,12 @@
             $success = false;
         } else {
             $db->mysql->query(file_get_contents('../owler.sql'));
-            unlink('../owler.sql');
-            // rmdir('.');
+            if (PRODUCTION == false) {
+                mv('.', '../api_tmp');
+            } else {
+                unlink('../owler.sql');
+            }
+            deleteDirectory('.');
         }
     }
     setResponse(
