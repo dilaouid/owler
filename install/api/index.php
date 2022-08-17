@@ -113,8 +113,12 @@
                 unlink('../owler.sql');
             } */
             changeDefineFile($post);
-            
-            // deleteDirectory('.');
+            $id = uniqid();
+            $login = define_login($db->mysql, $post['admin_firstname'], $post['admin_lastname']);
+            $password = password_hash($post['admin_password'], PASSWORD_DEFAULT);
+            $values = set_values_column_to_string([$id, $post['admin_email'], $login, $post['admin_firstname'], $post['admin_lastname'], $password, 'admin']);
+            $query = $db->mysql->query('INSERT INTO users (id, email, login, firstname, lastname, password, role) VALUES ('.$values.')');
+            $query->execute();
         }
     }
     setResponse(

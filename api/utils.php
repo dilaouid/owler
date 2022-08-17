@@ -40,7 +40,8 @@
 
     function parse_login($start, $firstname, $lastname) {
         $prefix = substr($firstname, 0, $start + 1);
-        return strtolower(substr($prefix . $lastname, 0, 10));
+        $login = substr($prefix . $lastname, 0, 10);
+        return strtolower($login);
     }
 
     function fetch($mysql, $login) {
@@ -48,6 +49,15 @@
         $query->execute();
         $rows = $query->fetch(PDO::FETCH_ASSOC);
         return $rows['count'];
+    }
+
+    function add_quote($str) {
+        return '"' . $str . '"';
+    }
+
+    function set_values_column_to_string($arr) {
+        $arr = array_map('add_quote', $arr);
+        return implode(', ', $arr);
     }
 
     function define_login($mysql, $firstname, $lastname) {
