@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Users;
 use App\Service\UserService;
+use App\Service\RequestService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,11 @@ class InstallController extends AbstractController
 {
 
     private $mysql;
+
+    /**
+     * @var RequestService
+     */
+    private $rs;
 
     /**
      * @var Environment
@@ -47,32 +53,32 @@ class InstallController extends AbstractController
 
     private function databaseVerification(): bool {
         
-        $host = $this->request['host'];
-        $username = $this->request['mysql-username'];
-        $password = $this->request['mysql-password'];
-        $port = $this->request['port'] ?? 3306;
+        $host = $this->rs->check_key('host');
+        $username = $this->rs->check_key('mysql-username');
+        $password = $this->rs->check_key('mysql-password');
+        $port = $this->rs->check_key('port', 3306);
 
         try {
             $this->mysql = new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=' . null  . ';charset=utf8', $username, $password);
             return true;
         } catch (\Exception $e) {
-            array_push($this->data, ["host", "mysql-username", "mysql-password"]);
+            array_push($this->data, "host", "mysql-username", "mysql-password");
             return false;
         }
     }
 
     private function platformVerification(): void {
-        $name = $this->request['platform_name'];
-        if (strlen($name) < 3 && strlen($name) > 20)
+        $name = $this->rs->check_key('platform_name');
+        if (strlen($name) < 3 || strlen($name) > 20)
             array_push($this->data, ["platform_name" => "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères."]);
     }
 
     private function adminVerification(): void {
-        $email = $this->request["admin_email"];
-        $password = $this->request["admin_password"];
-        $confirm = $this->request["confirm_admin_password"];
-        $firstname = $this->request['admin_firstname'];
-        $lastname = $this->request['admin_lastname'];
+        $email = $this->rs->check_key("admin_email");
+        $password = $this->rs->check_key("admin_password");
+        $confirm = $this->rs->check_key("confirm_admin_password");
+        $firstname = $this->rs->check_key('admin_firstname');
+        $lastname = $this->rs->check_key('admin_lastname');
 
         // Between 8 and 20 characters, including a lowercase, uppercase, digit and symbol
         $passwordPattern = '$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$';
@@ -97,7 +103,7 @@ class InstallController extends AbstractController
 
     private function cguVerification(): void {
         for ($i=1; $i < 5; $i++) { 
-            if (!$this->request["condition_$i"])
+            if (!$this->rs->check_key("condition_$i", false))
                 array_push($this->data, "condition_$i");
         }
     }
@@ -106,18 +112,19 @@ class InstallController extends AbstractController
         $admin = new Users();
         $userService = new UserService();
         $admin->setRole('admin')
-            ->setEmail($this->request['admin_email'])
-            ->setFirstname($this->request['admin_firstname'])
-            ->setLastname($this->request['admin_lastname'])
-            ->setLogin($userService->define_login($this->mysql, $this->request['admin_firstname'], $this->request['admin_lastname']))
-            ->setPassword(password_hash($this->request['admin_password'], PASSWORD_DEFAULT));
+            ->setEmail($this->rs->check_key('admin_email'))
+            ->setFirstname($this->rs->check_key('admin_firstname'))
+            ->setLastname($this->rs->check_key('admin_lastname'))
+            ->setLogin($userService->define_login($this->mysql, $this->rs->check_key('admin_firstname'), $this->rs->check_key('admin_lastname')))
+            ->setPassword(password_hash($this->rs->check_key('admin_password'), PASSWORD_DEFAULT));
         $em = $this->getDoctrine()->getManager();
         $em->persist($admin);
         $em->flush();
     }
 
     public function database(Request $req): Response {
-        $this->request = $req->request->all();
+        $this->rs = new RequestService($req->request);
+        $this->all = $req->request->all();
 
         if ($this->databaseVerification())
             return new Response(setResponse("OK", $this->data), 200);
@@ -125,7 +132,8 @@ class InstallController extends AbstractController
     }
 
     public function platform(Request $req): Response {
-        $this->request = $req->request->all();
+        $this->rs = new RequestService($req->request);
+        $this->all = $req->request->all();
 
         $this->platformVerification();
         $this->checkSuccess();
@@ -136,7 +144,8 @@ class InstallController extends AbstractController
     }
 
     public function admin(Request $req): Response {
-        $this->request = $req->request->all();
+        $this->rs = new RequestService($req->request);
+        $this->all = $req->request->all();
 
         $this->adminVerification();
         $this->checkSuccess();
@@ -149,7 +158,8 @@ class InstallController extends AbstractController
     }
 
     public function install(Request $req): Response {
-        $this->request = $req->request->all();
+        $this->rs = new RequestService($req->request);
+        $this->all = $this->rs->all();
 
         $this->platformVerification();
         $this->cguVerification();
@@ -159,10 +169,10 @@ class InstallController extends AbstractController
 
         // write env file and inject sql
         if ($this->success) {
-            $host = $this->request['host'];
-            $username = $this->request['mysql-username'];
-            $password = $this->request['mysql-password'];
-            $port = $this->request['port'] ?? "3306";
+            $host = $this->rs->check_key('host');
+            $username = $this->rs->check_key('mysql-username');
+            $password = $this->rs->check_key('mysql-password');
+            $port = $this->rs->check_key('port', "3306");
 
             $db = $_ENV["DATABASE_URL"];
             if (file_exists("../.env")) {
