@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Users;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,10 +47,10 @@ class InstallController extends AbstractController
 
     private function databaseVerification(): bool {
         
-        $host = $this->request->get('host');
-        $username = $this->request->get('mysql-username');
-        $password = $this->request->get('mysql-password');
-        $port = $this->request->get('port', 3306);
+        $host = $this->request['host'];
+        $username = $this->request['mysql-username'];
+        $password = $this->request['mysql-password'];
+        $port = $this->request['port'] ?? 3306;
 
         try {
             $this->mysql = new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=' . null  . ';charset=utf8', $username, $password);
@@ -60,17 +62,17 @@ class InstallController extends AbstractController
     }
 
     private function platformVerification(): void {
-        $name = $this->request->get('platform_name');
+        $name = $this->request['platform_name'];
         if (strlen($name) < 3 && strlen($name) > 20)
             array_push($this->data, ["platform_name" => "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères."]);
     }
 
     private function adminVerification(): void {
-        $email = $this->request->get("admin_email");
-        $password = $this->request->get("admin_password");
-        $confirm = $this->request->get("confirm_admin_password");
-        $firstname = $this->request->get('admin_firstname');
-        $lastname = $this->request->get('admin_lastname');
+        $email = $this->request["admin_email"];
+        $password = $this->request["admin_password"];
+        $confirm = $this->request["confirm_admin_password"];
+        $firstname = $this->request['admin_firstname'];
+        $lastname = $this->request['admin_lastname'];
 
         // Between 8 and 20 characters, including a lowercase, uppercase, digit and symbol
         $passwordPattern = '$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$';
@@ -95,14 +97,27 @@ class InstallController extends AbstractController
 
     private function cguVerification(): void {
         for ($i=1; $i < 5; $i++) { 
-            if (!$this->request->get("condition_$i"))
+            if (!$this->request["condition_$i"])
                 array_push($this->data, "condition_$i");
         }
     }
 
-    public function database(Request $req): Response {
+    private function createAdmin(): void {
+        $admin = new Users();
+        $userService = new UserService();
+        $admin->setRole('admin')
+            ->setEmail($this->request['admin_email'])
+            ->setFirstname($this->request['admin_firstname'])
+            ->setLastname($this->request['admin_lastname'])
+            ->setLogin($userService->define_login($this->mysql, $this->request['admin_firstname'], $this->request['admin_lastname']))
+            ->setPassword(password_hash($this->request['admin_password'], PASSWORD_DEFAULT));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($admin);
+        $em->flush();
+    }
 
-        $this->request = $req->request;
+    public function database(Request $req): Response {
+        $this->request = $req->request->all();
 
         if ($this->databaseVerification())
             return new Response(setResponse("OK", $this->data), 200);
@@ -110,7 +125,7 @@ class InstallController extends AbstractController
     }
 
     public function platform(Request $req): Response {
-        $this->request = $req->request;
+        $this->request = $req->request->all();
 
         $this->platformVerification();
         $this->checkSuccess();
@@ -121,7 +136,7 @@ class InstallController extends AbstractController
     }
 
     public function admin(Request $req): Response {
-        $this->request = $req->request;
+        $this->request = $req->request->all();
 
         $this->adminVerification();
         $this->checkSuccess();
@@ -134,7 +149,7 @@ class InstallController extends AbstractController
     }
 
     public function install(Request $req): Response {
-        $this->request = $req->request;
+        $this->request = $req->request->all();
 
         $this->platformVerification();
         $this->cguVerification();
@@ -144,10 +159,10 @@ class InstallController extends AbstractController
 
         // write env file and inject sql
         if ($this->success) {
-            $host = $this->request->get('host');
-            $username = $this->request->get('mysql-username');
-            $password = $this->request->get('mysql-password');
-            $port = $this->request->get('port', "3306") ?? "3306";
+            $host = $this->request['host'];
+            $username = $this->request['mysql-username'];
+            $password = $this->request['mysql-password'];
+            $port = $this->request['port'] ?? "3306";
 
             $db = $_ENV["DATABASE_URL"];
             if (file_exists("../.env")) {
@@ -155,7 +170,9 @@ class InstallController extends AbstractController
                 file_put_contents("../.env", str_replace(
                     "DATABASE_URL=\"$db\"", $url, file_get_contents('../.env')
                 ));
-                $this->mysql->query('CREATE DATABASE owler CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
+                $this->mysql->query('CREATE DATABASE IF NOT EXISTS owler CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
+                $this->mysql = new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=owler;charset=utf8', $username, $password);
+                $this->createAdmin();
             }
         }
         $statusCode = $this->success ? 200 : 406;
