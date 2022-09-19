@@ -152,7 +152,7 @@ class InstallController extends AbstractController
 
             $db = $_ENV["DATABASE_URL"];
             if (file_exists("../.env")) {
-                $url = "DATABASE_URL=\"mysql://".$username.":".$password."@".$host.":".(strlen($port) > 0 ? $port : "3306" )."/owler?serverVersion=14&charset=utf8mb4\"";
+                $url = "DATABASE_URL=\"mysql://".$username.":".$password."@".$host.":".(strlen($port) > 0 ? $port : "3306" )."/owler\"";
                 file_put_contents("../.env", str_replace(
                     "DATABASE_URL=\"$db\"", $url, file_get_contents('../.env')
                 ));
