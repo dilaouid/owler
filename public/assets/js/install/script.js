@@ -101,14 +101,12 @@ $('#next').click( () => {
     setLoading(true);
     const data = fillInputObj();
     const qs = convertToQueryString(data);
-    console.log(data);
     xhr.open('post', req[step - 1], true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             setLoading(false);
             var res = JSON.parse(xhr.response);
-            console.log(xhr);
             if (xhr.status === 200 && step < 4)
               goToStep(1);
             setBorderDanger(res.data, res.message, res.success ? step - 1 : step);
