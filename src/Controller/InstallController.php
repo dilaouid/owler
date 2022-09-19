@@ -19,7 +19,7 @@ class InstallController extends AbstractController
     /**
      * @var Array
      */
-    public $err;
+    public $data;
 
     /**
      * @var bool
@@ -52,6 +52,7 @@ class InstallController extends AbstractController
             new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=' . null  . ';charset=utf8', $username, $password);
             return true;
         } catch (\Exception $e) {
+            array_push($this->data, ["host", "mysql-username", "mysql-password"]);
             return false;
         }
     }
@@ -59,6 +60,8 @@ class InstallController extends AbstractController
     private function platformVerification(): void {
         $name = $this->request->get('platform_name');
         $this->success = strlen($name) >= 3 && strlen($name) <= 20;
+        if (!$this->success)
+            array_push($this->data, ["platform_name" => "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères."]);
     }
 
     private function adminVerification(): void {
@@ -72,17 +75,17 @@ class InstallController extends AbstractController
         $passwordPattern = '$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$';
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-            array_push($this->err, ["admin_email" => "L'adresse email saisit est invalide"]);
+            array_push($this->data, ["admin_email" => "L'adresse email saisit est invalide"]);
         if (!$lastname)
-            array_push($this->err, ["admin_lastname" => "Le nom de famille doit être renseigné"]);
+            array_push($this->data, ["admin_lastname" => "Le nom de famille doit être renseigné"]);
         if (!$firstname)
-            array_push($this->err, ["admin_firstname" => "Le prénom doit être renseigné"]);
+            array_push($this->data, ["admin_firstname" => "Le prénom doit être renseigné"]);
 
         // Check for password pattern and confirmation
         if (!preg_match($passwordPattern, $password))
-            array_push($this->err, ["admin_password" => "Le mot de passe doit contenir au moins 8 caractères, une minuscule, une majuscule, un symbole et un chiffre"]);
+            array_push($this->data, ["admin_password" => "Le mot de passe doit contenir au moins 8 caractères, une minuscule, une majuscule, un symbole et un chiffre"]);
         else if ($confirm !== $password)
-            array_push($this->err, ["confirm_admin_password" => "Les mots de passes saisits ne sont pas identiques"]);
+            array_push($this->data, ["confirm_admin_password" => "Les mots de passes saisits ne sont pas identiques"]);
     }
 
     public function database(Request $req): Response {
@@ -90,8 +93,8 @@ class InstallController extends AbstractController
         $this->request = $req->request;
 
         if ($this->databaseVerification())
-            return new Response(setResponse(200, "OK", []), 200);
-        return new Response(setResponse(406, "Les données de connexion à la base de données sont invalides", ["host", "mysql-username", "mysql-password"]), 406);
+            return new Response(setResponse(200, "OK", $this->data), 200);
+        return new Response(setResponse(406, "Les données de connexion à la base de données sont invalides", $this->data), 406);
     }
 
     public function platform(Request $req): Response {
@@ -100,7 +103,7 @@ class InstallController extends AbstractController
         $this->platformVerification();
         $statusCode = $this->success ? 200 : 406;
 
-        return new Response(setResponse($statusCode, $this->success ? "OK" : "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères.", $this->success ? [] : ['platform_name']), $statusCode);
+        return new Response(setResponse($statusCode, $this->success ? "OK" : "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères.", $this->data), $statusCode);
     }
 
     public function admin(Request $req): Response {
@@ -108,12 +111,12 @@ class InstallController extends AbstractController
 
         $this->adminVerification();
         
-        $this->success = count($this->err) === 0;
+        $this->success = count($this->data) === 0;
         $statusCode = $this->success ? 200 : 406;
         return new Response(setResponse(
             $statusCode,
             $this->success ? 'OK' : "Le formulaire saisit est incorrect.",
-            $this->err,
+            $this->data,
         ), $statusCode);
     }
 }
