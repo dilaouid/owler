@@ -16,14 +16,14 @@ class UserService
         return strtolower($login);
     }
 
-    private function countUserWithUsername($mysql) {
+    private function countUserWithUsername(\PDO $mysql) {
         $query = $mysql->query("SELECT COUNT(login) AS 'count' FROM users WHERE login = '". $this->login ."'");
         $query->execute();
         $rows = $query->fetch(\PDO::FETCH_ASSOC);
         return $rows['count'];
     }
 
-    public function define_login($mysql, $firstname, $lastname) {
+    public function define_login(\PDO $mysql, string $firstname, string $lastname) {
         $idx = 0;
         $this->login = $this->parse_login($idx, $firstname, $lastname);
         $suffix = 1;
