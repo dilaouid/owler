@@ -5,7 +5,6 @@ var step = 1; // The current step of the form, 1 by default
 
 /* Set the loading spinner in the next button */
 const setLoading = (active) => {
-  $('.fieldErrorInputInstallForm').remove();
   $(active ? "#loading" : step < 4 ?? "#next-button-icon").removeClass('d-none');
   $(active ? step < 4 ?? "#next-button-icon" : "#loading").addClass('d-none');
   active ? $("#next").prop("disabled", true) : $("#next").removeAttr("disabled");
@@ -78,7 +77,7 @@ const changeButton = (element, active) => {
 /* Go to the next or previous step, changing the buttons attributes */
 const goToStep = (next) => {
   $(`#step-${step}-form`).addClass("d-none");
-  $(`#step-${step + 1}-form`).removeClass("d-none");
+  $(`#step-${step + (next > 0 ? 1 : -1)}-form`).removeClass("d-none");
   $(`#step-${step}`).removeClass("text-primary")
                     .addClass("text-black-50");
   step += next;
@@ -99,20 +98,19 @@ const goToStep = (next) => {
 /* Clicking on the next step button */
 $('#next').click( () => {
     setLoading(true);
+    $('.fieldErrorInputInstallForm').remove();
     const data = fillInputObj();
-    const qs = convertToQueryString(data);
-    xhr.open('post', req[step - 1], true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            setLoading(false);
-            var res = JSON.parse(xhr.response);
-            if (xhr.status === 200 && step < 4)
-              goToStep(1);
-            setBorderDanger(res.data, res.message, res.success ? step - 1 : step);
-        }
-    };
-    xhr.send(qs);
+    axios.post(req[step - 1], data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }).then( (res) => {
+      if (step < 4)
+        goToStep(1);
+    }).catch( (e) => {
+      const resp = e.response.data;
+      setBorderDanger(resp.data, resp.message, step);
+    }).finally( () => {
+      setLoading(false);
+    });
 });
 
 /* Clicking on the previous step button */
