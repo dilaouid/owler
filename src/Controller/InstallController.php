@@ -105,8 +105,8 @@ class InstallController extends AbstractController
         $this->request = $req->request;
 
         if ($this->databaseVerification())
-            return new Response(setResponse(200, "OK", $this->data), 200);
-        return new Response(setResponse(406, "Les données de connexion à la base de données sont invalides", $this->data), 406);
+            return new Response(setResponse("OK", $this->data), 200);
+        return new Response(setResponse("Les données de connexion à la base de données sont invalides", $this->data), 406);
     }
 
     public function platform(Request $req): Response {
@@ -117,7 +117,7 @@ class InstallController extends AbstractController
 
         $statusCode = $this->success ? 200 : 406;
 
-        return new Response(setResponse($statusCode, $this->success ? "OK" : "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères.", $this->data), $statusCode);
+        return new Response(setResponse($this->success ? "OK" : "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères.", $this->data), $statusCode);
     }
 
     public function admin(Request $req): Response {
@@ -128,7 +128,6 @@ class InstallController extends AbstractController
         
         $statusCode = $this->success ? 200 : 406;
         return new Response(setResponse(
-            $statusCode,
             $this->success ? 'OK' : "Le formulaire saisit est incorrect.",
             $this->data,
         ), $statusCode);
@@ -162,7 +161,6 @@ class InstallController extends AbstractController
         $statusCode = $this->success ? 200 : 406;
 
         return new Response(setResponse(
-            $statusCode,
             $this->success ? 'OK' : "Tout les champs doivent être correctement remplis.",
             $this->data,
         ), $statusCode);
