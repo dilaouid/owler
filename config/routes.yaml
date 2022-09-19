@@ -1,0 +1,26 @@
+installation:api-1:
+    path: /api/database
+    controller: App\Controller\InstallController::database
+    methods: POST
+
+
+installation:api-2:
+    path: /api/platform
+    controller: App\Controller\InstallController::platform
+    methods: POST
+
+installation:api-3:
+    path: /api/admin
+    controller: App\Controller\InstallController::admin
+    methods: POST
+
+installation:api-4:
+    path: /api/install
+    controller: App\Controller\InstallController::install
+    methods: POST
+
+installation:
+    path: /install
+    controller: App\Controller\InstallController::index
+    methods: GET
+
