@@ -11,6 +11,8 @@ use Twig\Environment;
 class InstallController extends AbstractController
 {
 
+    private $mysql;
+
     /**
      * @var Environment
      */
@@ -19,7 +21,7 @@ class InstallController extends AbstractController
     /**
      * @var Array
      */
-    public $data;
+    public $data = [];
 
     /**
      * @var bool
@@ -49,7 +51,7 @@ class InstallController extends AbstractController
         $port = $this->request->get('port', 3306);
 
         try {
-            new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=' . null  . ';charset=utf8', $username, $password);
+            $this->mysql = new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=' . null  . ';charset=utf8', $username, $password);
             return true;
         } catch (\Exception $e) {
             array_push($this->data, ["host", "mysql-username", "mysql-password"]);
@@ -59,8 +61,7 @@ class InstallController extends AbstractController
 
     private function platformVerification(): void {
         $name = $this->request->get('platform_name');
-        $this->success = strlen($name) >= 3 && strlen($name) <= 20;
-        if (!$this->success)
+        if (strlen($name) < 3 && strlen($name) > 20)
             array_push($this->data, ["platform_name" => "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères."]);
     }
 
@@ -88,6 +89,17 @@ class InstallController extends AbstractController
             array_push($this->data, ["confirm_admin_password" => "Les mots de passes saisits ne sont pas identiques"]);
     }
 
+    private function checkSuccess(): void {
+        $this->success = count($this->data) === 0;
+    }
+
+    private function cguVerification(): void {
+        for ($i=1; $i < 5; $i++) { 
+            if (!$this->request->get("condition_$i"))
+                array_push($this->data, "condition_$i");
+        }
+    }
+
     public function database(Request $req): Response {
 
         $this->request = $req->request;
@@ -101,6 +113,8 @@ class InstallController extends AbstractController
         $this->request = $req->request;
 
         $this->platformVerification();
+        $this->checkSuccess();
+
         $statusCode = $this->success ? 200 : 406;
 
         return new Response(setResponse($statusCode, $this->success ? "OK" : "Le nom de votre plateforme de connexion doit faire entre 3 et 20 caractères.", $this->data), $statusCode);
@@ -110,12 +124,46 @@ class InstallController extends AbstractController
         $this->request = $req->request;
 
         $this->adminVerification();
+        $this->checkSuccess();
         
-        $this->success = count($this->data) === 0;
         $statusCode = $this->success ? 200 : 406;
         return new Response(setResponse(
             $statusCode,
             $this->success ? 'OK' : "Le formulaire saisit est incorrect.",
+            $this->data,
+        ), $statusCode);
+    }
+
+    public function install(Request $req): Response {
+        $this->request = $req->request;
+
+        $this->platformVerification();
+        $this->cguVerification();
+        $this->adminVerification();
+        $this->databaseVerification();
+        $this->checkSuccess();
+
+        // write env file and inject sql
+        if ($this->success) {
+            $host = $this->request->get('host');
+            $username = $this->request->get('mysql-username');
+            $password = $this->request->get('mysql-password');
+            $port = $this->request->get('port', "3306") ?? "3306";
+
+            $db = $_ENV["DATABASE_URL"];
+            if (file_exists("../.env")) {
+                $url = "DATABASE_URL=\"mysql://".$username.":".$password."@".$host.":".(strlen($port) > 0 ? $port : "3306" )."/owler?serverVersion=14&charset=utf8mb4\"";
+                file_put_contents("../.env", str_replace(
+                    "DATABASE_URL=\"$db\"", $url, file_get_contents('../.env')
+                ));
+                $this->mysql->query('CREATE DATABASE owler CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
+            }
+        }
+        $statusCode = $this->success ? 200 : 406;
+
+        return new Response(setResponse(
+            $statusCode,
+            $this->success ? 'OK' : "Tout les champs doivent être correctement remplis.",
             $this->data,
         ), $statusCode);
     }

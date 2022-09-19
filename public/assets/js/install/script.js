@@ -1,5 +1,5 @@
 const xhr = new XMLHttpRequest();
-const req = ["api/database", "api/platform", "api/admin", "api/"];
+const req = ["api/database", "api/platform", "api/admin", "api/install"];
 const title = ["Connexion à la base de donnée", "Information sur la plateforme", "Compte administrateur", "Conditions"];
 var step = 1; // The current step of the form, 1 by default
 
