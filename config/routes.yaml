@@ -1,8 +1,9 @@
+
+# Routes for the installation of the CMS
 installation:api-1:
     path: /api/database
     controller: App\Controller\InstallController::database
     methods: POST
-
 
 installation:api-2:
     path: /api/platform
@@ -24,3 +25,8 @@ installation:
     controller: App\Controller\InstallController::index
     methods: GET
 
+# auth routes
+login:
+    path: /login
+    controller: App\Controller\AuthController::index
+    methods: GET|POST
