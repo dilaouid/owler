@@ -182,10 +182,27 @@ class InstallController extends AbstractController
 
             $db = $_ENV["DATABASE_URL"];
             if (file_exists("../.env")) {
+
                 $url = "DATABASE_URL=\"mysql://".$username.":".$password."@".$host.":".(strlen($port) > 0 ? $port : "3306" )."/owler\"";
                 file_put_contents("../.env", str_replace(
                     "DATABASE_URL=\"$db\"", $url, file_get_contents('../.env')
                 ));
+
+                $envPlatformName = $_ENV['PLATFORM_NAME'];
+                $newPlatformName = "PLATFORM_NAME=\"".$this->rs->check_key("platform_name")."\"";
+                file_put_contents("../.env", str_replace(
+                    "PLATFORM_NAME=\"$envPlatformName\"", $newPlatformName, file_get_contents('../.env')
+                ));
+
+                $inputPlatformDesc = $this->rs->check_key("platform_description");
+                if ($inputPlatformDesc) {
+                    $envPlatformDesc = $_ENV['PLATFORM_DESC'];
+                    $newPlatformDesc = "PLATFORM_DESC=\"$inputPlatformDesc\"";
+                    file_put_contents("../.env", str_replace(
+                        "PLATFORM_DESC=\"$envPlatformDesc\"", $newPlatformDesc, file_get_contents('../.env')
+                    ));
+                }
+                
                 $this->mysql->query('CREATE DATABASE IF NOT EXISTS owler CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
                 $this->mysql = new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=owler;charset=utf8', $username, $password);
                 $this->createAdmin();
