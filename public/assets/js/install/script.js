@@ -95,6 +95,13 @@ const goToStep = (next) => {
   $('#title-form-heading').html(title[step - 1]);
 };
 
+/* Complete installation on successful last step */
+const completeInstallation = (login) => {
+  $('#login').html(login);
+  $('#secondRowInstall').remove();
+  $('#thirdRowInstall').removeClass('d-none');
+};
+
 /* Clicking on the next step button */
 $('#next').click( () => {
     setLoading(true);
@@ -103,8 +110,7 @@ $('#next').click( () => {
     axios.post(req[step - 1], data, {
       headers: { "Content-Type": "multipart/form-data" },
     }).then( (res) => {
-      if (step < 4)
-        goToStep(1);
+      step < 4 ? goToStep(1) : completeInstallation(res.data.data);
     }).catch( (e) => {
       const resp = e.response.data;
       setBorderDanger(resp.data, resp.message, step);

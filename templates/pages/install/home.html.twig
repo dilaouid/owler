@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block body %}
+
     <div class="row g-0" id="top-page">
         <div class="col-auto" id="logo">
             <img src="./assets/img/logo/full_size_owler_logo_no_shadow_flat_icon.png" width="30">
@@ -20,6 +21,7 @@
             <h4 class="text-black"><strong><span class="owler-color">owler</span></strong> - Installation</h4>
         </div>
     </div>
+
     <div class="row g-0 text-black" id="secondRowInstall">
         <div class="col-6" data-aos="fade-right" data-aos-duration="1000" id="leftColInstallPage">
             <div class="row">
@@ -157,6 +159,19 @@
 
         </div>
     </div>
+
+    <div id="thirdRowInstall" class="d-none row g-0 justify-content-center">
+        <div id="colFinalContent" class="col-auto">
+            <h5 class="text-center owler-secondary-color">
+                <strong>owler</strong>
+                <span> a correctement été installé !</span><br><br>
+            </h5>
+            <p class="text-center text-secondary">Vous pouvez dès à présent vous connecter <a href="/" target="_blank">ici</a>.<br>
+                Votre identifiant est: <strong class="owler-third-color" id="login"></strong>
+            </p>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}

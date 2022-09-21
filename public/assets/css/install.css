@@ -62,4 +62,22 @@
   .owler-color {
     color: rgb(48, 126, 203);
   }
+
+  .owler-secondary-color {
+    color: rgb(84, 116, 149);
+  }
+
+  .owler-third-color {
+    color: rgb(0, 142, 214);
+  }
   
+  #thirdRowInstall {
+    margin-top: 129px;
+  }
+
+  #colFinalContent {
+    box-shadow: 1px 1px 3px rgba(33,37,41,0.18);
+    border: 1px solid var(--bs-gray-500);
+    padding: 30px;
+    border-radius: 18px;
+  }

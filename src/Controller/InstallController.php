@@ -14,6 +14,11 @@ use Twig\Environment;
 class InstallController extends AbstractController
 {
 
+    /**
+     * @var string
+     */
+    private $login;
+
     private $mysql;
 
     /**
@@ -111,11 +116,12 @@ class InstallController extends AbstractController
     private function createAdmin(): void {
         $admin = new Users();
         $userService = new UserService();
+        $this->login = $userService->define_login($this->mysql, $this->rs->check_key('admin_firstname'), $this->rs->check_key('admin_lastname'));
         $admin->setRole('admin')
             ->setEmail($this->rs->check_key('admin_email'))
             ->setFirstname($this->rs->check_key('admin_firstname'))
             ->setLastname($this->rs->check_key('admin_lastname'))
-            ->setLogin($userService->define_login($this->mysql, $this->rs->check_key('admin_firstname'), $this->rs->check_key('admin_lastname')))
+            ->setLogin($this->login)
             ->setPassword(password_hash($this->rs->check_key('admin_password'), PASSWORD_DEFAULT));
         $em = $this->getDoctrine()->getManager();
         $em->persist($admin);
@@ -183,6 +189,7 @@ class InstallController extends AbstractController
                 $this->mysql->query('CREATE DATABASE IF NOT EXISTS owler CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
                 $this->mysql = new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=owler;charset=utf8', $username, $password);
                 $this->createAdmin();
+                $this->data = $this->login;
             }
         }
         $statusCode = $this->success ? 200 : 406;
