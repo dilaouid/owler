@@ -30,7 +30,7 @@ class AuthController extends AbstractController
         return count($files) > 0 ? $files : [];
     }
 
-    public function index(): Response {
+    public function loginPage(): Response {
         $selectedPictures = $this->getAllSideImagesFiles();
         return new Response($this->twig->render('pages/auth/login.html.twig', [
             "selected_picture" => $selectedPictures[array_rand($selectedPictures)],
