@@ -100,11 +100,11 @@
     }
   }
   
-  input {
+  .formfield {
     border-radius: 20px;
   }
 
-  button {
+  #submit {
     color: var(--bs-white);
     padding-top: 10px;
     padding-bottom: 10px;
