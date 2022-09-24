@@ -23,27 +23,25 @@
                     <form method="post">
                         <div class="form-group mb-3">
                             <label class="form-label text-secondary">Nom d'utilisateur</label>
-                            <input name="username" class="form-control formfield" value="{{ last_username }}" type="text" autocomplete="login" required autofocus>
+                            <input name="username" class="form-control {% if error %} is-invalid {% endif %} formfield" value="{{ last_username }}" type="text" autocomplete="login" required autofocus>
                         </div>
 
                         <div class="form-group mb-3">
                             <label class="form-label text-secondary">Mot de passe</label>
-                            <input name="password" class="form-control formfield" type="password" required>
+                            <input name="password" class="form-control {% if error %} is-invalid {% endif %} formfield" type="password" required>
+                            <div class="invalid-feedback">
+                                Nom d'utilisateur ou mot de passe incorrect.
+                            </div>
                         </div>
 
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                         <button id="submit" class="btn btn-info mt-2" type="submit" style="color: var(--bs-white)">Se connecter</button>
 
-                        {% if error %}
-                            <div class="alert alert-danger error">{{ error }}</div>
-                        {% endif %}
                     </form>
-
                     <p class="mt-3 mb-0">
                         <a class="text-info small" href="#">Mot de passe oublié ?</a>
                     </p>
-
                 </div>
             </div>
 
