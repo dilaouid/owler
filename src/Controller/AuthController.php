@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\Users;
+use App\Entity\User;
 use App\Service\UserService;
 use App\Service\RequestService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
 
 class AuthController extends AbstractController
@@ -30,11 +31,22 @@ class AuthController extends AbstractController
         return count($files) > 0 ? $files : [];
     }
 
-    public function loginPage(): Response {
+    public function login(AuthenticationUtils $authenticationUtils): Response {
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        if ($error)
+            $error = "Nom d'utilisateur ou mot de passe invalide.";
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
         $selectedPictures = $this->getAllSideImagesFiles();
         return new Response($this->twig->render('pages/auth/login.html.twig', [
             "selected_picture" => $selectedPictures[array_rand($selectedPictures)],
-            "platform_name" => "owler"
+            "platform_name" => "owler",
+            'last_username' => $lastUsername,
+            'error' => $error
         ]));
     }
 
