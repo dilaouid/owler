@@ -45,4 +45,9 @@ class AuthController extends AbstractController
         ]));
     }
 
+    public function logout(): void
+    {
+        throw new \LogicException('');
+    }
+
 }
