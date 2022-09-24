@@ -8,24 +8,24 @@ class UserService
     /**
      * @var string
      */
-    private $login;
+    private $username;
 
-    private function parse_login($start, $firstname, $lastname) {
+    private function parse_username($start, $firstname, $lastname) {
         $prefix = substr($firstname, 0, $start + 1);
-        $login = substr($prefix . $lastname, 0, 10);
-        return strtolower($login);
+        $username = substr($prefix . $lastname, 0, 10);
+        return strtolower($username);
     }
 
     private function countUserWithUsername(\PDO $mysql) {
-        $query = $mysql->query("SELECT COUNT(login) AS 'count' FROM users WHERE login = '". $this->login ."'");
+        $query = $mysql->query("SELECT COUNT(username) AS 'count' FROM user WHERE username = '". $this->username ."'");
         $query->execute();
         $rows = $query->fetch(\PDO::FETCH_ASSOC);
         return $rows['count'];
     }
 
-    public function define_login(\PDO $mysql, string $firstname, string $lastname) {
+    public function define_username(\PDO $mysql, string $firstname, string $lastname) {
         $idx = 0;
-        $this->login = $this->parse_login($idx, $firstname, $lastname);
+        $this->username = $this->parse_username($idx, $firstname, $lastname);
         $suffix = 1;
         $prefixIdx = 1;
 
@@ -38,12 +38,12 @@ class UserService
                     $prefixIdx = 1;
                     $suffix = 1;
                 }
-                $this->login = $this->parse_login($prefixIdx - 1, $firstname, $lastname) . $suffix;
+                $this->username = $this->parse_username($prefixIdx - 1, $firstname, $lastname) . $suffix;
                 $prefixIdx++;
             } else
-                $this->login = $this->parse_login($idx++, $firstname, $lastname);
+                $this->username = $this->parse_username($idx++, $firstname, $lastname);
         }
-        return ($this->login);
+        return ($this->username);
     }
 
 }
