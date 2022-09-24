@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Users;
+use App\Entity\User;
 use App\Service\UserService;
 use App\Service\RequestService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +17,7 @@ class InstallController extends AbstractController
     /**
      * @var string
      */
-    private $login;
+    private $username;
 
     private $mysql;
 
@@ -114,14 +114,14 @@ class InstallController extends AbstractController
     }
 
     private function createAdmin(): void {
-        $admin = new Users();
+        $admin = new User();
         $userService = new UserService();
-        $this->login = $userService->define_login($this->mysql, $this->rs->check_key('admin_firstname'), $this->rs->check_key('admin_lastname'));
-        $admin->setRole('admin')
+        $this->username = $userService->define_username($this->mysql, $this->rs->check_key('admin_firstname'), $this->rs->check_key('admin_lastname'));
+        $admin->setRoles(['admin'])
             ->setEmail($this->rs->check_key('admin_email'))
             ->setFirstname($this->rs->check_key('admin_firstname'))
             ->setLastname($this->rs->check_key('admin_lastname'))
-            ->setLogin($this->login)
+            ->setUsername($this->username)
             ->setPassword(password_hash($this->rs->check_key('admin_password'), PASSWORD_DEFAULT));
         $em = $this->getDoctrine()->getManager();
         $em->persist($admin);
@@ -203,10 +203,10 @@ class InstallController extends AbstractController
                     ));
                 }
                 
-                $this->mysql->query('CREATE DATABASE IF NOT EXISTS owler CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
+                $this->mysql->query('CREATE DATABASE IF NOT EXISTS owler CHARACTER SET utf8 COLLATE utf8_unicode_ci;');
                 $this->mysql = new \PDO('mysql:host='. $host .';port=' . $port . ';dbname=owler;charset=utf8', $username, $password);
                 $this->createAdmin();
-                $this->data = $this->login;
+                $this->data = $this->username;
             }
         }
         $statusCode = $this->success ? 200 : 406;
