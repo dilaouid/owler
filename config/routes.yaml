@@ -26,7 +26,7 @@ installation:
     methods: GET
 
 # auth routes
-login:
+app_login:
     path: /login
-    controller: App\Controller\AuthController::loginPage
+    controller: App\Controller\AuthController::login
     methods: GET|POST
